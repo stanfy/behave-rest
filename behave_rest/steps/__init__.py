@@ -68,8 +68,9 @@ def get_request(context, request_verb, url_path_segment):
 def request_with_parameters(context, request_verb, url_path_segment):
     url = context.base_url + '/' + url_path_segment
 
+    params = {}
+
     for row in context.table:
-        params = {}
         for x in context.table.headings:
             params[x] = row[x]
             if row[x].startswith("context"):
@@ -83,15 +84,20 @@ def request_with_parameters(context, request_verb, url_path_segment):
 
 
 @step('the response status code should equal {expected_http_status_code}')
-def status_validation(context, expected_http_status_code):
+def status_code_validation(context, expected_http_status_code):
     nose.tools.assert_equal(context.r.status_code, int(expected_http_status_code))
+
+
+@step('the response status message should equal "{expected_http_status_message}"')
+def status_message_validation(context, expected_http_status_message):
+    nose.tools.assert_equal(context.r.reason, str(expected_http_status_message))
 
 
 @step('the response parameter "{parameter_name}" should equal "{expected_parameter_value}"')
 def parameter_validation(context, parameter_name, expected_parameter_value):
     data = context.r.json()
 
-    nose.tools.assert_equal(data[parameter_name], expected_parameter_value)
+    nose.tools.assert_equal(data[parameter_name], str(expected_parameter_value))
 
 
 @step('the response header "{header_name}" should equal "{expected_header_value}"')

@@ -3,7 +3,7 @@ from behave import *
 import nose
 import requests
 from nose.tools import assert_equal
-from features.steps import json_responses  # this should be changed to location of your file with responses
+from features.steps import json_responses
 
 use_step_matcher("parse")
 
@@ -20,18 +20,6 @@ def set_base_url(context, base_url):
 def store_header(context, header_name, header_value):
     if header_value.startswith("context"):
         context.headers[header_name.encode('ascii')] = getattr(context, header_value[8:])
-    else:
-        context.headers[header_name.encode('ascii')] = header_value.encode('ascii')
-
-
-@step('I set Authorization header to "{header_value}"')
-def store_header(context, header_value):
-    header_name = "Authorization"
-
-    if header_value.startswith("context"):
-        initial_value = getattr(context, header_value[8:])
-        desired_value = "Bearer " + initial_value
-        context.headers[header_name.encode('ascii')] = desired_value.encode('ascii')
     else:
         context.headers[header_name.encode('ascii')] = header_value.encode('ascii')
 
@@ -108,9 +96,14 @@ def parameter_validation(context, header_name, expected_header_value):
 @step('the response structure should equal "{expected_response_structure}"')
 def response_structure_validation(context, expected_response_structure):
     data = context.r.json()
-    response_valid = getattr(json_responses, expected_response_structure)
+    try:
+        response_valid = getattr(json_responses, expected_response_structure)
 
-    assert response_valid.check(data)
+        assert response_valid.check(data)
+    except NameError:
+        print("")
+        print("File with responses not found")
+        print("")
 
 
 def log_full(r):

@@ -3,7 +3,7 @@ from behave import *
 import nose
 import requests
 from nose.tools import assert_equal
-import json_responses
+from features.steps import json_responses  # this should be changed to location of your file with responses
 
 use_step_matcher("parse")
 

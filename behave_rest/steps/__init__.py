@@ -3,7 +3,6 @@ from behave import *
 import nose
 import requests
 from nose.tools import assert_equal
-from features.steps import json_responses
 
 use_step_matcher("parse")
 
@@ -97,7 +96,7 @@ def parameter_validation(context, header_name, expected_header_value):
 def response_structure_validation(context, expected_response_structure):
     data = context.r.json()
     try:
-        response_valid = getattr(json_responses, expected_response_structure)
+        response_valid = getattr(context.json_responses, expected_response_structure)
 
         assert response_valid.check(data)
     except NameError:

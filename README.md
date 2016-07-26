@@ -47,6 +47,19 @@ Feature: Twitter search
     And the response header "status" should equal "200 OK"
 ```
 
+## CI reports
+Behave support JUnit reports, that are easily parsed by CI tools
+
+To enable JUnit reports, create `behave.ini` file:
+```
+[behave]
+junit=true
+```
+Reports are generated into `/reports` folder
+
+Another useful options to add into `behave.ini` are:
+`stdout_capture=False` to add printed output into reports
+`show_timings=no` to hide timing of each step
 
 ## Project Structure
 

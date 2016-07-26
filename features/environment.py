@@ -8,3 +8,4 @@ def before_all(context):
     context.staging_url = context.settings['staging_base_url']
     context.headers = {}
     context.json_responses = json_responses
+    context.twitter_auth = context.settings['twitter_auth']

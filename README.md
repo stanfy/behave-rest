@@ -3,6 +3,32 @@ BDD-style Rest API testing tool
 
 It uses python's requests (https://pypi.python.org/pypi/requests/) for performing HTTP requests, nose (https://pypi.python.org/pypi/nose/1.3.7) for most assertions, trafaret (https://github.com/Deepwalker/trafaret) for json validation and behave (https://pypi.python.org/pypi/behave/1.2.5) for BDD style of tests.
 
+
+### Running
+
+To run a particular feature file, use `behave` + filename (e.g. `behave features/login.feature`) Don't forget to specify path to the feature file!
+
+To run all feature files use `behave`
+
+Add `--no-capture` to see printed output: `behave --no-capture`
+
+Use `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'negative'): `behave --tags=positive`
+
+
+### Dependencies:
+
+-behave
+
+-nose
+
+-requests
+
+-trafaret
+
+
+Run `pip install -r requirements.txt` to install required dependencies
+
+
 ### Project Structure:
 
 ```
@@ -33,27 +59,3 @@ It uses python's requests (https://pypi.python.org/pypi/requests/) for performin
         +-- *.py // steps related to corresponding feature (e.g. "login.py" contains steps that are related to "login.feature")  
         
 ```
-
-### Running
-
-To run a particular feature file, use `behave` + filename (e.g. `behave features/login.feature`) Don't forget to specify path to the feature file!
-
-To run all feature files use `behave`
-
-Add `--no-capture` to see printed output
-
-Use `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'negative')
-
-
-### Dependencies:
-
--behave
-
--nose
-
--requests
-
--trafaret
-
-
-Run `pip install -r requirements.txt` to install required dependencies

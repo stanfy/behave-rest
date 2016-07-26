@@ -213,67 +213,45 @@ twitterUserData = t.Dict({
     t.Key('profile_banner_url', optional=True): t.String
 })
 
-twitterRetweetedStatusData = t.Dict({
+twitterTweetBaseEntity = t.Dict({
+    t.Key('contributors', optional=True): twitterContributorsData | t.Null,
+    t.Key('coordinates', optional=True): twitterCoordinatesEntity | t.Null,
     t.Key('created_at'): t.String,
+    t.Key('entities'): twitterStatusEntitiesData,
+    t.Key('favorite_count'): t.Int | t.Null,
+    t.Key('favorited'): t.Bool | t.Null,
+    t.Key('filter_level', optional=True): t.String,
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,
-    t.Key('text'): t.String,
-    t.Key('truncated'): t.Bool,
-    t.Key('entities'): twitterStatusEntitiesData | t.Null,
-    t.Key('metadata'): twitterStatusMetaData | t.Null,
-    t.Key('source'): t.String,
     t.Key('in_reply_to_status_id'): t.Int | t.Null,
     t.Key('in_reply_to_status_id_str'): t.String | t.Null,
     t.Key('in_reply_to_user_id'): t.Int | t.Null,
     t.Key('in_reply_to_user_id_str'): t.String | t.Null,
     t.Key('in_reply_to_screen_name'): t.String | t.Null,
-    t.Key('user'): twitterUserData,
-    t.Key('geo'): geoData | t.Null,
-    t.Key('coordinates'): twitterCoordinatesEntity | t.Null,
-    t.Key('place'): twitterPlaceEntity | t.Null,
-    t.Key('contributors'): t.List(twitterContributorsData) | t.Null,
-    t.Key('is_quote_status'): t.Bool,
-    t.Key('retweet_count'): t.Int,
-    t.Key('favorite_count'): t.Int,
-    t.Key('favorited'): t.Bool,
-    t.Key('retweeted'): t.Bool,
     t.Key('lang'): t.String,
+    t.Key('place'): twitterPlaceEntity | t.Null,
+    t.Key('possibly_sensitive', optional=True): t.Bool | t.Null,
     t.Key('quoted_status_id', optional=True): t.Int | t.Null,
     t.Key('quoted_status_id_str', optional=True): t.String | t.Null,
-    t.Key('possibly_sensitive', optional=True): t.Bool
+    t.Key('retweet_count'): t.Int,
+    t.Key('retweeted'): t.Bool,
+    t.Key('source'): t.String,
+    t.Key('text'): t.String,
+    t.Key('truncated'): t.Bool,
+    t.Key('user'): twitterUserData,
+    t.Key('withheld_copyright', optional=True): t.String,
+    t.Key('withheld_in_countries', optional=True): t.List(t.String),
+    t.Key('withheld_scope', optional=True): t.String,
+    t.Key('is_quote_status', optional=True): t.Bool,
+    t.Key('geo'): geoData | t.Null,
+    t.Key('metadata'): twitterStatusMetaData | t.Null
 })
 
-twitterStatusData = t.Dict({
-    t.Key('created_at'): t.String,
-    t.Key('id'): t.Int,
-    t.Key('id_str'): t.String,
-    t.Key('text'): t.String,
-    t.Key('metadata'): twitterStatusMetaData | t.Null,
-    t.Key('truncated'): t.Bool,
-    t.Key('entities'): twitterStatusEntitiesData | t.Null,
-    t.Key('user'): twitterUserData,
-    t.Key('source'): t.String,
-    t.Key('in_reply_to_status_id'): t.Int | t.Null,
-    t.Key('in_reply_to_status_id_str'): t.String | t.Null,
-    t.Key('in_reply_to_user_id'): t.Int | t.Null,
-    t.Key('in_reply_to_user_id_str'): t.String | t.Null,
-    t.Key('in_reply_to_screen_name'): t.String | t.Null,
-    t.Key('geo'): geoData | t.Null,
-    t.Key('coordinates'): twitterCoordinatesEntity | t.Null,
-    t.Key('place'): twitterPlaceEntity | t.Null,
-    t.Key('contributors'): t.List(twitterContributorsData) | t.Null,
-    t.Key('retweeted_status', optional=True): twitterRetweetedStatusData | t.Null,
-    t.Key('is_quote_status'): t.Bool,
-    t.Key('retweet_count'): t.Int,
-    t.Key('favorite_count'): t.Int,
-    t.Key('favorited'): t.Bool,
-    t.Key('retweeted'): t.Bool,
-    t.Key('lang'): t.String,
-    t.Key('possibly_sensitive', optional=True): t.Bool,
-    t.Key('quoted_status_id', optional=True): t.Int | t.Null,
-    t.Key('quoted_status_id_str', optional=True): t.String | t.Null,
-    t.Key('quoted_status', optional=True): twitterRetweetedStatusData | t.Null
-})
+twitterRetweetedTweetEntity = twitterTweetBaseEntity.merge(t.Dict({
+    t.Key('retweeted_status', optional=True): twitterTweetBaseEntity.merge(t.Dict({
+        t.Key('quoted_status', optional=True): twitterTweetBaseEntity | t.Null})) | t.Null,
+    t.Key('quoted_status', optional=True): twitterTweetBaseEntity | t.Null
+}))
 
 twitterSearchMetaData = t.Dict({
     t.Key('completed_in'): t.Float,
@@ -288,68 +266,49 @@ twitterSearchMetaData = t.Dict({
 })
 
 twitterSearchData = t.Dict({
-    t.Key('statuses'): t.List(twitterStatusData),
+    t.Key('statuses'): t.List(twitterTweetBaseEntity | twitterRetweetedTweetEntity),
     t.Key('search_metadata'): twitterSearchMetaData
 })
 
 # Twitter timeline response jSON
 
-twitterTimelineRetweetData = t.Dict({
+twitterTimelineTweetEntity = t.Dict({
+    t.Key('contributors', optional=True): twitterContributorsData | t.Null,
+    t.Key('coordinates', optional=True): twitterCoordinatesEntity | t.Null,
     t.Key('created_at'): t.String,
+    t.Key('entities'): twitterStatusEntitiesData,
+    t.Key('favorite_count'): t.Int | t.Null,
+    t.Key('favorited'): t.Bool | t.Null,
+    t.Key('filter_level', optional=True): t.String,
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,
-    t.Key('text'): t.String,
-    t.Key('truncated'): t.Bool,
-    t.Key('entities'): twitterStatusEntitiesData | t.Null,
-    t.Key('source'): t.String,
     t.Key('in_reply_to_status_id'): t.Int | t.Null,
     t.Key('in_reply_to_status_id_str'): t.String | t.Null,
     t.Key('in_reply_to_user_id'): t.Int | t.Null,
     t.Key('in_reply_to_user_id_str'): t.String | t.Null,
     t.Key('in_reply_to_screen_name'): t.String | t.Null,
-    t.Key('user'): twitterUserData,
-    t.Key('geo'): geoData | t.Null,
-    t.Key('coordinates'): twitterCoordinatesEntity | t.Null,
-    t.Key('place'): twitterPlaceEntity | t.Null,
-    t.Key('contributors'): t.List(twitterContributorsData) | t.Null,
-    t.Key('is_quote_status'): t.Bool,
-    t.Key('retweet_count'): t.Int,
-    t.Key('favorite_count'): t.Int,
-    t.Key('favorited'): t.Bool,
-    t.Key('retweeted'): t.Bool,
     t.Key('lang'): t.String,
+    t.Key('place'): twitterPlaceEntity | t.Null,
+    t.Key('possibly_sensitive', optional=True): t.Bool | t.Null,
     t.Key('quoted_status_id', optional=True): t.Int | t.Null,
     t.Key('quoted_status_id_str', optional=True): t.String | t.Null,
-    t.Key('possibly_sensitive', optional=True): t.Bool
+    t.Key('retweet_count'): t.Int,
+    t.Key('retweeted'): t.Bool,
+    t.Key('source'): t.String,
+    t.Key('text'): t.String,
+    t.Key('truncated'): t.Bool,
+    t.Key('user'): twitterUserData,
+    t.Key('withheld_copyright', optional=True): t.String,
+    t.Key('withheld_in_countries', optional=True): t.List(t.String),
+    t.Key('withheld_scope', optional=True): t.String,
+    t.Key('is_quote_status', optional=True): t.Bool,
+    t.Key('geo'): geoData | t.Null
 })
 
-twitterUserTimelineData = t.List(t.Dict({
-    t.Key('created_at'): t.String,
-    t.Key('id'): t.Int,
-    t.Key('id_str'): t.String,
-    t.Key('text'): t.String,
-    t.Key('truncated'): t.Bool,
-    t.Key('entities'): twitterStatusEntitiesData | t.Null,
-    t.Key('user'): twitterUserData,
-    t.Key('source'): t.String,
-    t.Key('in_reply_to_status_id'): t.Int | t.Null,
-    t.Key('in_reply_to_status_id_str'): t.String | t.Null,
-    t.Key('in_reply_to_user_id'): t.Int | t.Null,
-    t.Key('in_reply_to_user_id_str'): t.String | t.Null,
-    t.Key('in_reply_to_screen_name'): t.String | t.Null,
-    t.Key('geo'): geoData | t.Null,
-    t.Key('coordinates'): twitterCoordinatesEntity | t.Null,
-    t.Key('place'): twitterPlaceEntity | t.Null,
-    t.Key('contributors'): t.List(twitterContributorsData) | t.Null,
-    t.Key('retweeted_status', optional=True): twitterTimelineRetweetData | t.Null,
-    t.Key('is_quote_status'): t.Bool,
-    t.Key('retweet_count'): t.Int,
-    t.Key('favorite_count'): t.Int,
-    t.Key('favorited'): t.Bool,
-    t.Key('retweeted'): t.Bool,
-    t.Key('lang'): t.String,
-    t.Key('possibly_sensitive', optional=True): t.Bool,
-    t.Key('quoted_status_id', optional=True): t.Int | t.Null,
-    t.Key('quoted_status_id_str', optional=True): t.String | t.Null,
-    t.Key('quoted_status', optional=True): twitterTimelineRetweetData | t.Null,
+twitterRetweetedTimelineTweetEntity = twitterTimelineTweetEntity.merge(t.Dict({
+    t.Key('retweeted_status', optional=True): twitterTimelineTweetEntity.merge(t.Dict({
+        t.Key('quoted_status', optional=True): twitterTimelineTweetEntity | t.Null})) | t.Null,
+    t.Key('quoted_status', optional=True): twitterTimelineTweetEntity | t.Null
 }))
+
+twitterUserTimelineData = t.List(twitterTimelineTweetEntity | twitterRetweetedTimelineTweetEntity)

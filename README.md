@@ -1,21 +1,25 @@
 # behave-rest
+
 BDD-style Rest API testing tool
 
 It uses python's requests (https://pypi.python.org/pypi/requests/) for performing HTTP requests, nose (https://pypi.python.org/pypi/nose/1.3.7) for most assertions, trafaret (https://github.com/Deepwalker/trafaret) for json validation and behave (https://pypi.python.org/pypi/behave/1.2.5) for BDD style of tests.
 
+## Installation
+Clone project
 
-### Running
+Run `pip install -r requirements.txt` to install required dependencies
 
-To run a particular feature file, use `behave` + filename (e.g. `behave features/login.feature`) Don't forget to specify path to the feature file!
+## Running
 
-To run all feature files use `behave`
+Run `behave` to execute all feature files
+
+Run `behave` + filename to execute a particular feature file. Don't forget to specify path to the feature file (e.g. `behave features/twitter.feature`)!
 
 Add `--no-capture` to see printed output: `behave --no-capture`
 
-Use `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'negative'): `behave --tags=positive`
+Add `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'negative'): `behave --tags=positive`
 
-
-### Dependencies:
+## Dependencies:
 
 -behave
 
@@ -26,10 +30,13 @@ Use `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'neg
 -trafaret
 
 
-Run `pip install -r requirements.txt` to install required dependencies
+## Project Structure
 
+Feature files are intended to locate in `/features` folder
 
-### Project Structure:
+Corresponding steps are located in `/features/steps`
+
+Overall project structure is as follows:
 
 ```
 +-- requirements.txt // store python requirements

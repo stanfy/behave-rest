@@ -12,7 +12,7 @@ Run `pip install -r requirements.txt` to install required dependencies
 ## Running
 
 ```bash
-# to execute all feature tiles (all tests)
+# to execute all feature files (all tests)
 behave
 
 # to execture specific feature
@@ -25,18 +25,7 @@ behave --no-capture
 behave --tags=without_login --tags=slow
 
 ```
-More about behave tool you can reaad here https://pythonhosted.org/behave/index.html
-
-## Dependencies:
-
-[behave](https://pythonhosted.org/behave/index.html)
-
--nose
-
--requests
-
--trafaret
-
+More about behave tool you can read here https://pythonhosted.org/behave/index.html
 
 ## Test example
 ```cucumber

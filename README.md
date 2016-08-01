@@ -11,27 +11,24 @@ Run `pip install -r requirements.txt` to install required dependencies
 
 ## Running
 
-Run `behave` to execute all feature files
+```bash
+# to execute all feature files (all tests)
+behave
 
-Run `behave` + filename to execute a particular feature file. Don't forget to specify path to the feature file (e.g. `behave features/twitter.feature`)!
+# to execture specific feature
+behave features/twitter.feature
 
-Add `--no-capture` to see printed output: `behave --no-capture`
+# to see printed output add --no-capture
+behave --no-capture
 
-Add `--tags=tagname` to run feature with a particular tag (e.g. 'positive', 'negative'): `behave --tags=positive`
+# run features with specific tags
+behave --tags=without_login --tags=slow
 
-## Dependencies:
-
--behave
-
--nose
-
--requests
-
--trafaret
-
+```
+More about behave tool you can read here https://pythonhosted.org/behave/index.html
 
 ## Test example
-```
+```cucumber
 Feature: Twitter search
 
   Background: Setup environment

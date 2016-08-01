@@ -1,4 +1,5 @@
 import trafaret as t
+import twitter_additional_responses
 
 """
 Example of using Trafaret (https://github.com/Deepwalker/trafaret) to describe json response structure
@@ -92,6 +93,14 @@ twitterPhotoSizeData = t.Dict({
     t.Key('resize'): t.String
 })
 
+twitterVideoVariantsData = t.List(
+    t.Dict({
+        t.Key('bitrate', optional=True): t.Int,
+        t.Key('content_type', optional=True): t.String,
+        t.Key('url', optional=True): t.String
+    })
+)
+
 twitterMediaEntity = t.Dict({
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,
@@ -111,7 +120,16 @@ twitterMediaEntity = t.Dict({
     t.Key('source_status_id', optional=True): t.Int,
     t.Key('source_status_id_str', optional=True): t.String,
     t.Key('source_user_id', optional=True): t.Int,
-    t.Key('source_user_id_str', optional=True): t.String
+    t.Key('source_user_id_str', optional=True): t.String,
+    t.Key('video_info', optional=True): t.Dict({
+        t.Key('aspect_ratio', optional=True): t.List(t.Int),
+        t.Key('duration_millis', optional=True): t.Int,
+        t.Key('variants'): twitterVideoVariantsData | t.Null
+    }),
+    t.Key('additional_media_info', optional=True): t.Dict({
+        t.Key('monetizable', optional=True): t.Bool,
+        t.Key('source_user', optional=True): twitter_additional_responses.twitterUserData
+    })
 })
 
 twitterStatusEntitiesData = t.Dict({
@@ -119,6 +137,10 @@ twitterStatusEntitiesData = t.Dict({
     t.Key('symbols'): t.List(twitterSymbolsEntity),
     t.Key('user_mentions'): t.List(twitterUserMentionsEntity),
     t.Key('urls'): t.List(twitterUrlsEntity) | t.Null,
+    t.Key('media', optional=True): t.List(twitterMediaEntity) | t.Null
+})
+
+twitterStatusExtendedEntitiesData = t.Dict({
     t.Key('media', optional=True): t.List(twitterMediaEntity) | t.Null
 })
 
@@ -165,59 +187,12 @@ twitterContributorsData = t.Dict({
     t.Key('screen_name'): t.String,
 })
 
-twitterUserData = t.Dict({
-    t.Key('id'): t.Int,
-    t.Key('id_str'): t.String,
-    t.Key('name'): t.String,
-    t.Key('screen_name'): t.String,
-    t.Key('location'): t.String(allow_blank=True) | t.Null,
-    t.Key('description'): t.String(allow_blank=True) | t.Null,
-    t.Key('url', optional=True): t.String | t.Null,
-    t.Key('entities'): t.Dict({
-        t.Key('description'): t.Dict({
-                t.Key('urls'): t.List(twitterUrlsEntity) | t.Null
-            })
-        }) | twitterUserUrlsEntity,
-    t.Key('protected'): t.Bool,
-    t.Key('followers_count'): t.Int,
-    t.Key('friends_count'): t.Int,
-    t.Key('listed_count'): t.Int,
-    t.Key('created_at'): t.String,
-    t.Key('favourites_count'): t.Int,
-    t.Key('utc_offset'): t.Int | t.Null,
-    t.Key('time_zone'): t.String | t.Null,
-    t.Key('geo_enabled'): t.Bool,
-    t.Key('verified'): t.Bool,
-    t.Key('statuses_count'): t.Int,
-    t.Key('lang'): t.String,
-    t.Key('contributors_enabled'): t.Bool,
-    t.Key('is_translator'): t.Bool,
-    t.Key('is_translation_enabled'): t.Bool,
-    t.Key('profile_background_color'): t.String,
-    t.Key('profile_background_image_url', optional=True): t.String | t.Null,
-    t.Key('profile_background_image_url_https'): t.String | t.Null,
-    t.Key('profile_background_tile'): t.Bool,
-    t.Key('profile_image_url'): t.String,
-    t.Key('profile_image_url_https'): t.String,
-    t.Key('profile_link_color'): t.String,
-    t.Key('profile_sidebar_border_color'): t.String,
-    t.Key('profile_sidebar_fill_color'): t.String,
-    t.Key('profile_text_color'): t.String,
-    t.Key('profile_use_background_image'): t.Bool,
-    t.Key('has_extended_profile'): t.Bool,
-    t.Key('default_profile'): t.Bool,
-    t.Key('default_profile_image'): t.Bool,
-    t.Key('following'): t.Null,
-    t.Key('follow_request_sent'): t.Null,
-    t.Key('notifications'): t.Null,
-    t.Key('profile_banner_url', optional=True): t.String
-})
-
 twitterTweetBaseEntity = t.Dict({
     t.Key('contributors', optional=True): twitterContributorsData | t.Null,
     t.Key('coordinates', optional=True): twitterCoordinatesEntity | t.Null,
     t.Key('created_at'): t.String,
     t.Key('entities'): twitterStatusEntitiesData,
+    t.Key('extended_entities', optional=True): twitterStatusExtendedEntitiesData,
     t.Key('favorite_count'): t.Int | t.Null,
     t.Key('favorited'): t.Bool | t.Null,
     t.Key('filter_level', optional=True): t.String,
@@ -238,7 +213,7 @@ twitterTweetBaseEntity = t.Dict({
     t.Key('source'): t.String,
     t.Key('text'): t.String,
     t.Key('truncated'): t.Bool,
-    t.Key('user'): twitterUserData,
+    t.Key('user'): twitter_additional_responses.twitterUserData,
     t.Key('withheld_copyright', optional=True): t.String,
     t.Key('withheld_in_countries', optional=True): t.List(t.String),
     t.Key('withheld_scope', optional=True): t.String,
@@ -297,7 +272,7 @@ twitterTimelineTweetEntity = t.Dict({
     t.Key('source'): t.String,
     t.Key('text'): t.String,
     t.Key('truncated'): t.Bool,
-    t.Key('user'): twitterUserData,
+    t.Key('user'): twitter_additional_responses.twitterUserData,
     t.Key('withheld_copyright', optional=True): t.String,
     t.Key('withheld_in_countries', optional=True): t.List(t.String),
     t.Key('withheld_scope', optional=True): t.String,

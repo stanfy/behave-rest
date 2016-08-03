@@ -4,7 +4,7 @@ import trafaret as t
 twitterUrlsEntity = t.Dict({
     t.Key('url'): t.String,
     t.Key('expanded_url'): t.String,
-    t.Key('display_url'): t.String,
+    t.Key('display_url', optional=True): t.String,
     t.Key('indices'): t.List(t.Int)
 })
 

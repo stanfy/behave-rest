@@ -172,15 +172,6 @@ twitterPlaceEntity = t.Dict({
     }) | t.Dict({})
 })
 
-twitterUserUrlsEntity = t.Dict({
-    t.Key('url'): t.Dict({
-        t.Key('urls'): t.List(twitterUrlsEntity)
-    }),
-    t.Key('description'): t.Dict({
-        t.Key('urls'): t.List(twitterUrlsEntity) | t.Null
-    })
-})
-
 twitterContributorsData = t.Dict({
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,

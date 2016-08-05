@@ -75,6 +75,12 @@ def status_code_validation(context, expected_http_status_code):
     nose.tools.assert_equal(context.r.status_code, int(expected_http_status_code))
 
 
+@step('the response status code should be among {expected_http_status_codes}')
+def status_code_array_validation(context, expected_http_status_codes):
+    expected_codes_list = [int(x) for x in expected_http_status_codes.split(',')]
+    nose.tools.assert_in(context.r.status_code, expected_codes_list)
+
+
 @step('the response status message should equal "{expected_http_status_message}"')
 def status_message_validation(context, expected_http_status_message):
     nose.tools.assert_equal(context.r.reason, str(expected_http_status_message))

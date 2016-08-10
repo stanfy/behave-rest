@@ -20,7 +20,7 @@ twitterUserUrlsEntity = t.Dict({
 twitterUserData = t.Dict({
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,
-    t.Key('name'): t.String,
+    t.Key('name'): t.String | t.Null,
     t.Key('screen_name'): t.String,
     t.Key('location'): t.String(allow_blank=True) | t.Null,
     t.Key('description'): t.String(allow_blank=True) | t.Null,

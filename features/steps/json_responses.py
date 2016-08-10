@@ -74,7 +74,7 @@ twitterSymbolsEntity = t.Dict({
 
 twitterUserMentionsEntity = t.Dict({
     t.Key('screen_name'): t.String,
-    t.Key('name'): t.String,
+    t.Key('name'): t.String | t.Null,
     t.Key('id'): t.Int,
     t.Key('id_str'): t.String,
     t.Key('indices'): t.List(t.Int)

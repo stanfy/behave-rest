@@ -127,6 +127,8 @@ twitterMediaEntity = t.Dict({
         t.Key('variants'): twitterVideoVariantsData | t.Null
     }),
     t.Key('additional_media_info', optional=True): t.Dict({
+        t.Key('title', optional=True): t.String,
+        t.Key('description', optional=True): t.String,
         t.Key('monetizable', optional=True): t.Bool,
         t.Key('source_user', optional=True): twitter_additional_responses.twitterUserData
     })
@@ -213,8 +215,13 @@ twitterTweetBaseEntity = t.Dict({
     t.Key('metadata'): twitterStatusMetaData | t.Null
 })
 
+scopesData = t.Dict({
+    t.Key('followers'): t.Bool
+})
+
 twitterRetweetedTweetEntity = twitterTweetBaseEntity.merge(t.Dict({
     t.Key('retweeted_status', optional=True): twitterTweetBaseEntity.merge(t.Dict({
+        t.Key('scopes', optional=True): scopesData,
         t.Key('quoted_status', optional=True): twitterTweetBaseEntity | t.Null})) | t.Null,
     t.Key('quoted_status', optional=True): twitterTweetBaseEntity | t.Null
 }))

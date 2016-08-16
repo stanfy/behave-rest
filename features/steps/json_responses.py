@@ -211,7 +211,10 @@ twitterTweetBaseEntity = t.Dict({
     t.Key('withheld_in_countries', optional=True): t.List(t.String),
     t.Key('withheld_scope', optional=True): t.String,
     t.Key('is_quote_status', optional=True): t.Bool,
-    t.Key('geo'): geoData | t.Null,
+    t.Key('geo', optional=True): t.Dict({
+        t.Key('type'): t.String,
+        t.Key('coordinates'): t.List(t.Float | t.Int)
+    }) | t.Null,
     t.Key('metadata'): twitterStatusMetaData | t.Null
 })
 
@@ -275,7 +278,10 @@ twitterTimelineTweetEntity = t.Dict({
     t.Key('withheld_in_countries', optional=True): t.List(t.String),
     t.Key('withheld_scope', optional=True): t.String,
     t.Key('is_quote_status', optional=True): t.Bool,
-    t.Key('geo'): geoData | t.Null
+    t.Key('geo', optional=True): t.Dict({
+        t.Key('type'): t.String,
+        t.Key('coordinates'): t.List(t.Float | t.Int)
+    }) | t.Null
 })
 
 twitterRetweetedTimelineTweetEntity = twitterTimelineTweetEntity.merge(t.Dict({

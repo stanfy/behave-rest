@@ -2,8 +2,8 @@ import trafaret as t
 
 
 twitterUrlsEntity = t.Dict({
-    t.Key('url'): t.String,
-    t.Key('expanded_url'): t.String,
+    t.Key('url'): t.String | t.Null,
+    t.Key('expanded_url'): t.String | t.Null,
     t.Key('display_url', optional=True): t.String,
     t.Key('indices'): t.List(t.Int)
 })
@@ -13,7 +13,7 @@ twitterUserUrlsEntity = t.Dict({
         t.Key('urls'): t.List(twitterUrlsEntity)
     }),
     t.Key('description'): t.Dict({
-        t.Key('urls'): t.List(twitterUrlsEntity) | t.Null
+        t.Key('urls'): t.List(twitterUrlsEntity) | t.List(t.Null)
     })
 })
 
@@ -27,7 +27,7 @@ twitterUserData = t.Dict({
     t.Key('url', optional=True): t.String | t.Null,
     t.Key('entities'): t.Dict({
         t.Key('description'): t.Dict({
-                t.Key('urls'): t.List(twitterUrlsEntity) | t.Null
+                t.Key('urls'): t.List(twitterUrlsEntity) | t.List (t.Null)
             })
         }) | twitterUserUrlsEntity,
     t.Key('protected'): t.Bool,

@@ -4,7 +4,7 @@ from setuptools import setup
 import behave_rest
 
 
-long_description = open('README.md', 'r').read()
+long_description = open('README.rst', 'r').read()
 
 install_requires = [
     'behave>=1.2.5',
@@ -26,7 +26,7 @@ setup(
     author_email='nikiphor@hotmail.com',
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers, QA Engineers',
+        'Intended Audience :: Developers',
         'Topic :: Software Development :: Testing',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',

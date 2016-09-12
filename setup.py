@@ -10,7 +10,8 @@ install_requires = [
     'behave>=1.2.5',
     'nose>=1.3.7',
     'requests>=2.10.0',
-    'trafaret>=0.7.1'
+    'trafaret>=0.7.1',
+    'jpath>=1.5'
 ]
 
 setup(

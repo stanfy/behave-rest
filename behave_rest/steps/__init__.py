@@ -1,8 +1,11 @@
 from __future__ import unicode_literals
+
 from behave import *
 import nose
 import requests
 from nose.tools import assert_equal
+import jpath
+import json
 
 use_step_matcher("parse")
 
@@ -15,11 +18,28 @@ def set_base_url(context, base_url):
         context.base_url = base_url.encode('ascii')
 
 
+@step('I add path "{path}" to base URL')
+def add_path_to_url(context, path):
+    context.base_url += "/" + path
+
+
 @step('I set "{header_name}" header to "{header_value}"')
-def store_header(context, header_name, header_value):
+def set_header(context, header_name, header_value):
     if header_value.startswith("context"):
-        context.headers[header_name.encode('ascii')] = getattr(context, header_value[8:])
+        context.headers[header_name.encode('ascii')] = getattr(context, header_value[8:]).encode('ascii')
     else:
+        context.headers[header_name.encode('ascii')] = header_value.encode('ascii')
+
+
+@step('I set Authorization header to "{header_value}"')
+def set_auth_header(context, header_value):
+    # This will set standard "Authorization" to provided value adding "Bearer " word
+    header_name = "Authorization"
+    if header_value.startswith("context"):
+        header_value = "Bearer " + getattr(context, header_value[8:])
+        context.headers[header_name.encode('ascii')] = header_value.encode('ascii')
+    else:
+        header_value = "Bearer " + header_value
         context.headers[header_name.encode('ascii')] = header_value.encode('ascii')
 
 
@@ -38,6 +58,29 @@ def store_parameter(context, parameter_name):
     data = context.r.json()
 
     return setattr(context, parameter_name, data[parameter_name])
+
+
+@step('I want to reuse parameter "{parameter_name}" at path "{json_path}"')
+def store_parameter_with_path(context, parameter_name, json_path):
+    data = context.r.json()
+    parameter_value = jpath.get(json_path, data)
+
+    print('')
+    print(parameter_value)
+    print('')
+
+    setattr(context, parameter_name, parameter_value)
+
+    print('')
+    print(getattr(context, parameter_name))
+    print('')
+
+
+@step('I want to reuse "{header_name}" header')
+def store_header(context, header_name):
+    data = context.r.headers
+
+    return setattr(context, header_name, data[header_name])
 
 
 @step('I make a {request_verb} request to "{url_path_segment}"')
@@ -75,6 +118,11 @@ def status_code_validation(context, expected_http_status_code):
     nose.tools.assert_equal(context.r.status_code, int(expected_http_status_code))
 
 
+@step('the response status code should not equal {invalid_http_status_code}')
+def status_code_validation(context, invalid_http_status_code):
+    nose.tools.assert_not_equal(context.r.status_code, int(invalid_http_status_code))
+
+
 @step('the response status code should be among {expected_http_status_codes}')
 def status_code_array_validation(context, expected_http_status_codes):
     expected_codes_list = [int(x) for x in expected_http_status_codes.split(',')]
@@ -86,11 +134,30 @@ def status_message_validation(context, expected_http_status_message):
     nose.tools.assert_equal(context.r.reason, str(expected_http_status_message))
 
 
-@step('the response parameter "{parameter_name}" should equal "{expected_parameter_value}"')
+@step('the response parameter "{parameter_name}" should equal {expected_parameter_value}')
 def parameter_validation(context, parameter_name, expected_parameter_value):
     data = context.r.json()
 
-    nose.tools.assert_equal(data[parameter_name], str(expected_parameter_value))
+    if expected_parameter_value.startswith("context"):
+        expected_parameter_value = getattr(context, expected_parameter_value[8:])
+        nose.tools.assert_equal(data[parameter_name], expected_parameter_value)
+    else:
+        converted_value = json.loads(expected_parameter_value)
+        nose.tools.assert_equal(data[parameter_name], converted_value)
+
+
+@step('JSON at path "{json_path}" should equal {expected_json_value}')
+def json_object_validation(context, json_path, expected_json_value):
+    data = context.r.json()
+    actual_json_value = jpath.get(json_path, data)
+
+    if expected_json_value.startswith("context"):
+        expected_json_value = getattr(context, expected_json_value[8:])
+        nose.tools.assert_equal(actual_json_value, expected_json_value)
+
+    else:
+        converted_value = json.loads(expected_json_value)
+        nose.tools.assert_equal(actual_json_value, converted_value)
 
 
 @step('the response header "{header_name}" should equal "{expected_header_value}"')

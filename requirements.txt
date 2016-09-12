@@ -1,4 +1,5 @@
 behave
-nose==1.3.7
-requests==2.10.0
-trafaret==0.7.1
+nose>=1.3.7
+requests>=2.10.0
+trafaret>=0.7.1
+jpath>=1.5

@@ -2,7 +2,7 @@
 
 BDD-style Rest API testing tool
 
-It uses python's requests (https://pypi.python.org/pypi/requests/) for performing HTTP requests, nose (https://pypi.python.org/pypi/nose/1.3.7) for most assertions, trafaret (https://github.com/Deepwalker/trafaret) for json validation and behave (https://pypi.python.org/pypi/behave/1.2.5) for BDD style of tests.
+It uses python's [requests](https://pypi.python.org/pypi/requests/) for performing HTTP requests, [nose](https://pypi.python.org/pypi/nose/1.3.7) for most assertions, [trafaret](https://github.com/Deepwalker/trafaret) for json validation and [behave](https://pypi.python.org/pypi/behave/1.2.5) for BDD style of tests.
 
 ## Installation
 Run `pip install behave_rest` to download package and install required dependencies
@@ -63,6 +63,10 @@ Another useful options to add into `behave.ini` are:
 `stdout_capture=False` to add printed output into reports
 
 `show_timings=no` to hide timing of each step
+
+## Step descriptions
+
+[Wiki page](https://github.com/stanfy/behave-rest/wiki) 
 
 ## Project Structure
 

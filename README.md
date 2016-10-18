@@ -68,6 +68,10 @@ Another useful options to add into `behave.ini` are:
 
 [Wiki page](https://github.com/stanfy/behave-rest/wiki) 
 
+## SSL validation
+
+By default, `requests` has a turned on SSL validation. This can be turned off globally, by setting `context.verify_ssl = True` in `environment.py`, or by using steps described in [Wiki page](https://github.com/stanfy/behave-rest/wiki#steps-related-to-ssl-validation) 
+
 ## Project Structure
 
 Feature files are intended to locate in `/features` folder

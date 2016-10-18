@@ -9,3 +9,4 @@ def before_all(context):
     context.headers = {}
     context.json_responses = json_responses
     context.twitter_auth = context.settings['twitter_auth']
+    context.verify_ssl = True

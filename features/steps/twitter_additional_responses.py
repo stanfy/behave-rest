@@ -62,5 +62,6 @@ twitterUserData = t.Dict({
     t.Key('following'): t.Null,
     t.Key('follow_request_sent'): t.Null,
     t.Key('notifications'): t.Null,
-    t.Key('profile_banner_url', optional=True): t.String
+    t.Key('profile_banner_url', optional=True): t.String,
+    t.Key('translator_type', optional=True): t.String
 })

@@ -23,6 +23,16 @@ def add_path_to_url(context, path):
     context.base_url += "/" + path
 
 
+@step('I do not want to verify SSL certs')
+def do_not_verify_ssl_certs(context):
+    context.verify_ssl = False
+
+
+@step('I want to verify SSL certs')
+def verify_ssl_certs(context):
+    context.verify_ssl = True
+
+
 @step('I set "{header_name}" header to "{header_value}"')
 def set_header(context, header_name, header_value):
     if header_value.startswith("context"):
@@ -85,9 +95,23 @@ def store_header(context, header_name):
 
 @step('I make a {request_verb} request to "{url_path_segment}"')
 def get_request(context, request_verb, url_path_segment):
+    if not hasattr(context, 'verify_ssl'):
+        context.verify_ssl = True
+
     url = context.base_url + '/' + url_path_segment
 
-    context.r = getattr(requests, request_verb.lower())(url, headers=context.headers)
+    context.r = getattr(requests, request_verb.lower())(url, headers=context.headers, verify=context.verify_ssl)
+
+    log_full(context.r)
+
+    return context.r
+
+
+@given('I make an untrusted {request_verb} request to "{url_path_segment}"')
+def untrusted_request(context, request_verb, url_path_segment):
+    url = context.base_url + '/' + url_path_segment
+
+    context.r = getattr(requests, request_verb.lower())(url, headers=context.headers, verify=False)
 
     log_full(context.r)
 
@@ -95,6 +119,28 @@ def get_request(context, request_verb, url_path_segment):
 
 
 @step('I make a {request_verb} request to "{url_path_segment}" with parameters')
+def request_with_parameters(context, request_verb, url_path_segment):
+    if not hasattr(context, 'verify_ssl'):
+        context.verify_ssl = True
+
+    url = context.base_url + '/' + url_path_segment
+
+    params = {}
+
+    for row in context.table:
+        for x in context.table.headings:
+            params[x] = row[x]
+            if row[x].startswith("context"):
+                params[x] = eval(row[x])
+
+    context.r = getattr(requests, request_verb.lower())(url, params, headers=context.headers, verify=context.verify_ssl)
+
+    log_full(context.r)
+
+    return context.r
+
+
+@step('I make an untrusted {request_verb} request to "{url_path_segment}" with parameters')
 def request_with_parameters(context, request_verb, url_path_segment):
     url = context.base_url + '/' + url_path_segment
 
@@ -106,7 +152,7 @@ def request_with_parameters(context, request_verb, url_path_segment):
             if row[x].startswith("context"):
                 params[x] = eval(row[x])
 
-    context.r = getattr(requests, request_verb.lower())(url, params, headers=context.headers)
+    context.r = getattr(requests, request_verb.lower())(url, params, headers=context.headers, verify=False)
 
     log_full(context.r)
 
@@ -215,3 +261,4 @@ def log_full(r):
     print("")
     print("")
     print("")
+

@@ -146,7 +146,10 @@ twitterStatusExtendedEntitiesData = t.Dict({
     t.Key('media', optional=True): t.List(twitterMediaEntity) | t.Null
 })
 
-twitterCoordinatesEntity = t.List(t.List(t.Float))
+twitterCoordinatesEntity = t.Dict({
+    t.Key('type', optional=True): t.String,
+    t.Key('coordinates'): t.List(t.Float)
+}) | t.List(t.List(t.Float))
 
 twitterPlaceEntity = t.Dict({
     t.Key('id'): t.String,
@@ -253,6 +256,7 @@ twitterTimelineTweetEntity = t.Dict({
     t.Key('coordinates', optional=True): twitterCoordinatesEntity | t.Null,
     t.Key('created_at'): t.String,
     t.Key('entities'): twitterStatusEntitiesData,
+    t.Key('extended_entities', optional=True): twitterStatusExtendedEntitiesData,
     t.Key('favorite_count'): t.Int | t.Null,
     t.Key('favorited'): t.Bool | t.Null,
     t.Key('filter_level', optional=True): t.String,
